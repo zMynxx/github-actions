@@ -4,10 +4,10 @@ on:
   workflow_call:
     secrets:
       SLACK_WEBHOOK_PROD:
-        description: 'Github secret containig slack webhook for prod channel'
+        description: "Github secret containig slack webhook for prod channel"
         required: true
   push:
-      
+
 jobs:
   continuous-integration:
     runs-on: ubuntu-20.04
@@ -17,21 +17,21 @@ jobs:
 
       #### Testing Skipped ####
       # - name: continuous-testing
-      #   uses: smipin/smip-ui/.github/actions/npm-test@feature/gha
+      #   uses: zmynx/github-actions/.github/actions/npm-test@feature/gha
       #   with:
       #     node_version: 16
       #     test_command: npm run test
       #     force_install_dependencies: true
-    
+
   slack:
     needs: [continuous-integration]
     runs-on: ubuntu-20.04
     if: always()
     steps:
       - name: Send slack message
-        uses: smipin/smip-ui/.github/actions/send-slack-message@feature/gha
+        uses: zmynx/github-actions/.github/actions/send-slack-message@feature/gha
         with:
-            result: ${{ needs.continuous-integration.result }}
-            title: "CI result:"
-            channel: spikerz-pipline
-            slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
+          result: ${{ needs.continuous-integration.result }}
+          title: "CI result:"
+          channel: spikerz-pipline
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
