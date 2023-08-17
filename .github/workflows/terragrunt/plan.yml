@@ -1,4 +1,4 @@
-name: "Apply Terragrunt"
+name: "Run-all Plan Terragrunt"
 on:
   workflow_dispatch:
     inputs:
