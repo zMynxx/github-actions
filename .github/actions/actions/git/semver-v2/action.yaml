@@ -41,7 +41,7 @@ outputs:
   prefix_patch:
     description: The next patch v-tag (e.g. prefix="prod-" -> prod-1.2.3)
     value: ${{ steps.prefixed.outputs.prefix_patch }}
->>>>>>> main
+>>>>>>> feature/gha
 
 runs:
   using: "composite"
@@ -95,4 +95,4 @@ runs:
       echo "${{ format('Output next prefixed patched version is {0}', steps.prefixed.outputs.prefix_patch ) }}"
       echo "${{ format('Output next prefixed minored version is {0}', steps.prefixed.outputs.prefix_minor ) }}"
       echo "${{ format('Output next prefixed majored version is {0}', steps.prefixed.outputs.prefix_major ) }}"
->>>>>>> main
+>>>>>>> feature/gha

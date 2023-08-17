@@ -17,7 +17,7 @@ jobs:
 
       #### Testing Skipped ####
       # - name: continuous-testing
-      #   uses: zmynx/github-actions/.github/actions/npm-test@main
+      #   uses: zmynx/github-actions/.github/actions/npm-test@feature/gha
       #   with:
       #     node_version: 16
       #     test_command: npm run test
@@ -29,7 +29,7 @@ jobs:
     if: always()
     steps:
       - name: Send slack message
-        uses: zmynx/github-actions/.github/actions/send-slack-message@main
+        uses: zmynx/github-actions/.github/actions/send-slack-message@feature/gha
         with:
           result: ${{ needs.continuous-integration.result }}
           title: "CI result:"
