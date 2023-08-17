@@ -1,0 +1,36 @@
+name: CI - NodeJS
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_PROD:
+        description: "Github secret containig slack webhook for prod channel"
+        required: true
+  push:
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code (including tags)
+        uses: actions/checkout@v3
+
+      - name: continuous-testing
+        uses: zmynx/github-actions/.github/actions/nodejs/npm-test@feature/gha
+        with:
+          node_version: 16
+          test_command: npm run test
+          force_install_dependencies: false
+
+  slack:
+    needs: [continuous-integration]
+    runs-on: ubuntu-20.04
+    if: always()
+    steps:
+      - name: Send slack message
+        uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
+        with:
+          result: ${{ needs.continuous-integration.result }}
+          title: "CI result:"
+          channel: spikerz-pipline
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}

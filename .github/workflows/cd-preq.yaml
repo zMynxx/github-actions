@@ -35,7 +35,7 @@ jobs:
           aws-region: ${{ inputs.aws_region }}
 
       - name: Validate ECR
-        uses: zmynx/github-actions/.github/actions/ecr-create@feature/gha
+        uses: zmynx/github-actions/.github/actions/aws/ecr-create@feature/gha
         with:
           registry_name: ${{ inputs.registry_name }}
           aws_region: ${{ inputs.aws_region }}

@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: check if PR is merged
-        uses: zmynx/github-actions/.github/actions/check-merge@feature/gha
+        uses: zmynx/github-actions/.github/actions/git/check-merge@feature/gha
 
   ci:
     needs: [check]
@@ -50,14 +50,14 @@ jobs:
 
       - name: Connect to ECR
         id: ecr-login
-        uses: zmynx/github-actions/.github/actions/ecr-login@feature/gha
+        uses: zmynx/github-actions/.github/actions/aws/ecr-login@feature/gha
         with:
           aws_region: ${{ vars.AWS_REGION }}
 
       - name: Semantic Versioning
         id: semver
 
-        uses: zmynx/github-actions/.github/actions/semver-v2@feature/gha
+        uses: zmynx/github-actions/.github/actions/git/semver-v2@feature/gha
         with:
           fallback_version: "${{ format('{0}-{1}', github.base_ref, '1.0.0') }}"
           prefix: "${{ format('{0}-', github.base_ref) }}"
@@ -65,17 +65,17 @@ jobs:
       ## Require permission to write to id-token
       - name: Publish
         id: publish-to-ecr
-        uses: zmynx/github-actions/.github/actions/publish-to-ecr@feature/gha
+        uses: zmynx/github-actions/.github/actions/aws/publish-to-ecr@feature/gha
         with:
           ecr_repo_name: prod.${{ github.event.repository.name }}
           ecr_registry: ${{ steps.ecr-login.outputs.registry }}
           image_tag: ${{ steps.semver.outputs.new_tag }}
 
       - name: Git Config
-        uses: zmynx/github-actions/.github/actions/git-config@feature/gha
+        uses: zmynx/github-actions/.github/actions/git/git-config@feature/gha
 
       - name: Git Tag
-        uses: zmynx/github-actions/.github/actions/git-tag@feature/gha
+        uses: zmynx/github-actions/.github/actions/git/git-tag@feature/gha
         with:
           tag: "${{ format('{0}-{1}', github.base_ref, steps.semver.outputs.new_tag) }}"
 
@@ -99,7 +99,7 @@ jobs:
         run: yq e '.version = "${{ needs.cd.outputs.new_tag }}"' -i charts/${{ github.event.repository.name }}/Chart.yaml
 
       - name: Git Config
-        uses: zmynx/github-actions/.github/actions/git-config@feature/gha
+        uses: zmynx/github-actions/.github/actions/git/git-config@feature/gha
 
       - name: commit
         id: commit
@@ -114,7 +114,7 @@ jobs:
     if: always()
     steps:
       - name: Send slack message
-        uses: zmynx/github-actions/.github/actions/send-slack-message@feature/gha
+        uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
         with:
           result: ${{ needs.cd-helm.result }}
           title: "CD result:"
