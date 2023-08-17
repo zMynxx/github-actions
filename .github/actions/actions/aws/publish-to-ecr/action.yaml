@@ -1,0 +1,51 @@
+name: Publish Image to ECR
+description: Build dockerfile based on a given context and push it to ECR with a given tagName
+inputs:
+  ecr_repo_name:
+    required: true
+    description: AWS ecr repo name
+  ecr_registry:
+    required: true
+    description: ECR url registry
+  image_tag:
+    required: false
+    description: "Image tag to be published"
+    default: latest
+  dockerfile_context:
+    required: false
+    description: "Location of the dockerfile"
+    default: .
+  dockerfile_name:
+    required: false
+    description: "Location of the dockerfile"
+    default: Dockerfile
+  build_args:
+    required: false
+    description: List of build args to pass to the docker build command
+    default: |
+      BUILDKIT_CONTEXT_KEEP_GIT_DIR=0
+
+## Permissions needed for this action
+# permissions:
+#   contents: read
+#   package: write
+
+runs:
+  using: "composite"
+  steps:
+  - name: Set up Docker Buildx
+    uses: docker/setup-buildx-action@v2
+
+  - name: Build the image (Dockerfile)
+    uses: docker/build-push-action@v2
+    id: build-image
+    with:
+      context: ${{ inputs.dockerfile_context }}
+      file: ${{ inputs.dockerfile_name }}
+      build-args: ${{ inputs.build_args }}
+      push: true
+      tags: |
+        ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:${{ inputs.image_tag }}
+        ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:latest
+      cache-from: type=gha
+      cache-to: type=gha,mode=max

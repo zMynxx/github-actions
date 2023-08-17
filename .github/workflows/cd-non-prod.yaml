@@ -1,0 +1,165 @@
+name: CD - Non-Prod
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - feature/dockerfile
+
+permissions:
+  id-token: write
+  contents: write
+  packages: write
+
+env:
+  ECR_REPO_NAME: ${{ format('{0}.{1}', github.base_ref, github.event.repository.name) }}
+
+jobs:
+  check:
+    name: check pr status
+    runs-on: ubuntu-22.04
+    steps:
+      - name: check if PR is merged
+        uses: smipin/smip-ui/.github/actions/check-merge@feature/gha
+
+  ci:
+    needs: [check]
+    name: continuous integration
+    uses: smipin/smip-ui/.github/workflows/ci.yaml@feature/gha
+    secrets: inherit
+
+  cd-preq:
+    needs: [check, ci]
+    name: continuous-deployment-pre-requisites
+    runs-on: ubuntu-22.04
+    steps:
+      ## Require permission to write to id-token
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_ECR }}
+          role-session-name: GitHub-Actions-OIDC-ECR
+          role-duration-seconds: 1200
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: ECR validate
+        uses: smipin/smip-ui/.github/actions/ecr-create@feature/gha
+        with:
+          registry_name: ${{ env.ECR_REPO_NAME }}
+          aws_region: ${{ vars.AWS_REGION }}
+
+  cd:
+    name: continuous-deployment
+    needs: [check, ci, cd-preq]
+    runs-on: ubuntu-22.04
+    outputs:
+      new_tag: ${{ steps.new_tag.outputs.new_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      ## Require permission to write to id-token
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_ECR }}
+          role-session-name: GitHub-Actions-OIDC
+          role-duration-seconds: 1200
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Connect to ECR
+        id: ecr-login
+        uses: smipin/smip-ui/.github/actions/ecr-login@feature/gha
+        with:
+          aws_region: ${{ vars.AWS_REGION }}
+
+      - name: Semantic Versioning
+        id: semverv2
+        uses: smipin/smip-ui/.github/actions/semver-v2@feature/gha
+        with:
+          fallback: "${{ format('{0}-{1}', github.base_ref, '1.0.0') }}"
+          prefix: "${{ format('{0}-', github.base_ref) }}"
+
+      - name: Downcase PR body
+        id: downcase
+        shell: bash
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          echo "pr_body_lowercase=${PR_BODY,,}" >> $GITHUB_OUTPUT
+
+      - name: Publish to ECR
+        id: new_tag
+        shell: bash
+        env:
+          NEW_TAG: ${{ contains(steps.downcase.outputs.pr_body_lowercase, '#major') && steps.semverv2.outputs.major || contains(steps.downcase.outputs.pr_body_lowercase, '#minor') && steps.semverv2.outputs.minor || steps.semverv2.outputs.patch }}
+        run: |
+          echo "new_tag=${{ env.NEW_TAG }}" >> $GITHUB_OUTPUT
+
+      ## Require permission to write to id-token
+      - name: Publish
+        id: publish-to-ecr
+        uses: smipin/smip-ui/.github/actions/publish-to-ecr@feature/gha
+        with:
+          ecr_repo_name: ${{ env.ECR_REPO_NAME }}
+          ecr_registry: ${{ steps.ecr-login.outputs.registry }}
+          image_tag: ${{ steps.new_tag.outputs.new_tag }}
+
+      - name: Git Config
+        uses: smipin/smip-ui/.github/actions/git-config@feature/gha
+
+      - name: Git Tag
+        uses: smipin/smip-ui/.github/actions/git-tag@feature/gha
+        with:
+          tag: "${{ format('{0}-{1}', github.base_ref, steps.new_tag.outputs.new_tag) }}"
+
+  cd-helm:
+    name: continuous-delivery
+    needs: [check, ci, cd-preq, cd]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: smipin/gitops
+          ref: ${{ github.base_ref }}
+          token: ${{ secrets.CD_API_KEY }}
+          fetch-depth: 0
+
+      - name: Update application version
+        run: yq e '.appVersion = "${{ needs.cd.outputs.new_tag }}"' -i charts/${{ github.event.repository.name }}/Chart.yaml
+
+      - name: Update chart version
+        run: yq e '.version = "${{ needs.cd.outputs.new_tag }}"' -i charts/${{ github.event.repository.name }}/Chart.yaml
+
+      - name: Git Config
+        uses: smipin/smip-ui/.github/actions/git-config@feature/gha
+
+      - name: commit
+        id: commit
+        run: |
+          git add .
+          git commit -m "Update chart ${{ github.event.repository.name }} version to ${{ needs.cd.outputs.new_tag }}"
+          git push origin ${{ github.base_ref }}
+
+  slack:
+    needs: [check, ci, cd-preq, cd, cd-helm]
+    runs-on: ubuntu-22.04
+    if: always()
+    steps:
+      - name: Send slack message
+        uses: smipin/smip-ui/.github/actions/send-slack-message@feature/gha
+        with:
+          result: ${{ needs.cd-helm.result }}
+          title: "CD result:"
+          channel: spikerz-pipline
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
+          extra_message: |
+            ${{ needs.cd-helm.result == 'success' &&  format('✅ *{0}* has been deployed to *{1}* environment successfully.', github.event.repository.name, github.base_ref) || format('❌ *{0}* has falied to deploy to *{1}* environment.', github.event.repository.name, github.base_ref) }}
+            *Version:* ${{ format('{0}-{1}', github.base_ref, needs.cd.outputs.new_tag ) }}
+            *Environment:* ${{ github.base_ref }}}
+            *Commit:* ${{ github.sha }}
+            *Commit message:* ${{ github.event.pull_request.title }}
+            *PR merged by:* ${{ github.event.pull_request.merged_by.login }}

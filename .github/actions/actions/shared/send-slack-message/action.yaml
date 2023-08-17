@@ -1,0 +1,37 @@
+name: 'Slack Notification'
+description: 'Send custom Slack notification'
+inputs:
+  slack_webhook:
+    required: true
+    description: Slack Webhook
+  result:
+    description: 'Result of the previous step (success or failure)'
+    required: true
+  channel:
+    description: 'Slack channel to send the notification to'
+    required: true
+  extra_message:
+    description: 'Message to send in the Slack notification'
+    required: false
+  title:
+    description: 'Title of the Slack notification'
+    required: false
+    default: "GitHub Build Result:"
+
+runs:
+  using: "composite"
+  steps:
+  - name: Send Slack notification
+    uses: rtCamp/action-slack-notify@v2
+    env:
+      SLACK_USERNAME: GitHubBot
+      SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+      SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+      SLACK_CHANNEL: ${{ inputs.channel }}
+      SLACK_MESSAGE: |
+        :robot_face: Results: ${{ inputs.result }}  :robot_face:
+        *Action Logs:*
+        ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        ${{ inputs.extra_message }}
+      SLACK_TITLE: ${{ inputs.title }}
+      SLACK_COLOR: ${{ inputs.result == 'success' && 'good' || 'danger' }}

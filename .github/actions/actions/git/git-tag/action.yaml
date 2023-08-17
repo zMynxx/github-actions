@@ -1,0 +1,17 @@
+name: Git Tag
+description: Publishes a new git tag
+
+inputs:
+  tag:
+    required: true
+    description: the git tag to publish
+
+runs:
+  using: "composite"
+  steps:
+  - name: Push new tag
+    id: push-new-tag
+    shell: bash
+    run: |
+      git tag ${{ inputs.tag }}
+      git push origin ${{ inputs.tag }} && exit 0 || exit 1

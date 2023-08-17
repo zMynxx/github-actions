@@ -1,0 +1,49 @@
+name: npm tests 
+description: "Install dependencies and run tests using npm"
+
+inputs:
+  test_command:
+    required: false
+    description: The npm test command to perform
+    default: npm run test:ci
+  node_version:
+    required: false
+    description: node version to run
+    default: 16
+  force_install_dependencies:
+    required: false
+    description: Set to true to use --force flag while installing dependencies
+    default: false
+    
+outputs:
+  test_result:
+    description: 'My output description'
+    value: ${{ steps.test.outputs.test_result }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    - name: Cache node modules
+      id: cache-npm
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ./node_modules
+        key: modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Dependencies
+      shell: bash
+      if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+      run: npm install ${{ inputs.force_install_dependencies && '--force' || '' }}}
+
+    - name: Run tests
+      shell: bash
+      id: test
+      run: |
+        ${{ inputs.test_command }}
+        echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT

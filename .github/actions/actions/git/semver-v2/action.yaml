@@ -1,0 +1,98 @@
+name: Semantic Versioning
+description: 'Check for the latest tag with given prefix (optional). It will create a 1.0.0 tag. Outputs all the available possibilities for patch, minor, major including v suffixed.'
+
+inputs:
+  fallback:
+    description: The previous tag
+    required: false
+    default: 1.0.0
+  prefix:
+    description: The prefix to use for the tag
+    required: false
+    default: ''
+
+outputs:
+  major:
+    description: The next major tag (e.g. 2.0.0)
+    value: ${{ steps.semver.outputs.major }}
+  minor:
+    description: The next minor tag (e.g. 1.3.3)
+    value: ${{ steps.semver.outputs.minor }}
+  patch:
+    description: The next patch tag (e.g. 1.2.4)
+    value: ${{ steps.semver.outputs.patch }}
+<<<<<<< HEAD
+    # v_major:
+    #   description: The next major v-tag (e.g. v2.0.0)
+    #   value: ${{ steps.semver.v_major }}
+    # v_minor:
+    #   description: The next minor v-tag (e.g. v1.3.0)
+    #   value: ${{ steps.semver.v_minor }}
+    # v_patch:
+    #   description: The next patch v-tag (e.g. v1.2.3)
+    #   value: ${{ steps.semver.v_patch }}
+=======
+  prefix_major:
+    description: The next major prefixed-tag (e.g. prefix="v" -> v2.0.0)
+    value: ${{ steps.prefixed.outputs.prefix_major }}
+  prefix_minor:
+    description: The next minor v-tag (e.g. prefix="dev" -> dev1.3.0)
+    value: ${{ steps.prefixed.outputs.prefix_minor }}
+  prefix_patch:
+    description: The next patch v-tag (e.g. prefix="prod-" -> prod-1.2.3)
+    value: ${{ steps.prefixed.outputs.prefix_patch }}
+>>>>>>> feature/gha
+
+runs:
+  using: "composite"
+  steps:
+
+  - name: Get Previous tag
+    id: previoustag
+    uses: WyriHaximus/github-action-get-previous-tag@v1
+    with:
+      fallback: ${{ inputs.fallback }}
+      prefix: ${{ inputs.prefix }}
+
+  ### The semvers step only handels clean tags, so we need to split the tag if any prefixs are used
+  - name: Clean tag
+    if: ${{ startsWith(steps.previoustag.outputs.tag, inputs.prefix) }}
+    uses: jungwinter/split@v2
+    id: split
+    with:
+      msg: ${{ steps.previoustag.outputs.tag }}
+      separator: ${{ inputs.prefix }}
+      maxsplit: -1
+
+  - name: Get next version matrix
+    id: semver
+    uses: WyriHaximus/github-action-next-semvers@v1
+    with:
+      version: ${{ startsWith(steps.previoustag.outputs.tag, inputs.prefix) && steps.split.outputs._1 ||  steps.previoustag.outputs.tag }}
+
+<<<<<<< HEAD
+  - name: Tester
+    shell: bash
+    run: |
+      echo "${{ format('Output patch versions is {0}', steps.semver.outputs.patch ) }}"
+      echo "${{ format('Output patch versions is {0}', steps.semver.outputs.minor ) }}"
+      echo "${{ format('Output patch versions is {0}', steps.semver.outputs.major ) }}"
+=======
+  - name: Output prefix
+    id: prefixed
+    shell: bash
+    run: |
+      echo "prefix_major=${{ format('{0}{1}', inputs.prefix, steps.semver.outputs.major ) }}" >> $GITHUB_OUTPUT
+      echo "prefix_minor=${{ format('{0}{1}', inputs.prefix, steps.semver.outputs.minor ) }}" >> $GITHUB_OUTPUT
+      echo "prefix_patch=${{ format('{0}{1}', inputs.prefix, steps.semver.outputs.patch ) }}" >> $GITHUB_OUTPUT
+
+  - name: Output
+    shell: bash
+    run: |
+      echo "${{ format('Output next patched version is {0}', steps.semver.outputs.patch ) }}"
+      echo "${{ format('Output next minored version is {0}', steps.semver.outputs.minor ) }}"
+      echo "${{ format('Output next majored version is {0}', steps.semver.outputs.major ) }}"
+      echo "${{ format('Output next prefixed patched version is {0}', steps.prefixed.outputs.prefix_patch ) }}"
+      echo "${{ format('Output next prefixed minored version is {0}', steps.prefixed.outputs.prefix_minor ) }}"
+      echo "${{ format('Output next prefixed majored version is {0}', steps.prefixed.outputs.prefix_major ) }}"
+>>>>>>> feature/gha

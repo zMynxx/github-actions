@@ -1,0 +1,57 @@
+name: Semantic Versioning
+description: 'Reads the PR body and checks for #major or #minor to bump the version, otherwise it bumps the patch version. If no tags exist, it will create a 1.0.0 tag. If the tag already exists, it will retry 5 times with a 5 second delay. If it still fails, it will exit with an error. Outputs the new tag as new_tag.'
+
+outputs:
+  new_tag:
+    description: The new tag
+    value: ${{ steps.create-new-tag.outputs.new_tag }}
+
+runs:
+  using: "composite"
+  steps:
+  - name: Bump version and create a tag
+    id: create-new-tag
+    shell: bash
+    run: |
+      PR_BODY="${{ github.event.pull_request.body }}"
+      PR_BODY_LOWER=$(echo "$PR_BODY" | tr '[:upper:]' '[:lower:]')
+      VERSION_BUMP="patch"
+      if [[ "$PR_BODY_LOWER" == *"#major"* ]]; then
+        VERSION_BUMP="major"
+      elif [[ "$PR_BODY_LOWER" == *"#minor"* ]]; then
+        VERSION_BUMP="minor"
+      fi
+
+      function create_new_tag() {
+        LATEST_TAG=$(git tag -l --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+
+        if [[ -z "$LATEST_TAG" ]]; then
+          echo "new_tag=1.0.0" >> $GITHUB_OUTPUT
+          return 0
+        fi
+
+        MAJOR="$(echo $LATEST_TAG | cut -d '.' -f1)"
+        MINOR="$(echo $LATEST_TAG | cut -d '.' -f2)"
+        PATCH="$(echo $LATEST_TAG | cut -d '.' -f3)"
+
+        if [[ "$VERSION_BUMP" == "major" ]]; then
+          MAJOR=$((MAJOR + 1))
+          MINOR=0
+          PATCH=0
+        elif [[ "$VERSION_BUMP" == "minor" ]]; then
+          MINOR=$((MINOR + 1))
+          PATCH=0
+        else
+          PATCH=$((PATCH + 1))
+        fi
+
+        NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+        echo "new_tag=$NEW_VERSION" >> $GITHUB_OUTPUT
+      }
+
+      for i in {1..5}
+      do
+        git fetch --tags
+        create_new_tag && break || echo "Failed to create new tag, retrying in 5 seconds ..."
+        sleep 5
+      done

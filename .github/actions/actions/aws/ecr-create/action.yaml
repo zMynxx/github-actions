@@ -1,0 +1,26 @@
+name: ECR Validate
+description: Create ECR registery if none exists
+inputs:
+  aws_region:
+    required: true
+    description: The AWS region
+    default: us-east-1
+  registry_name:
+    required: true
+    description: The name of the registery to check/create
+    default: us-east-1
+
+## Permissions needed for this action
+# permissions:
+#   id-token: write
+
+runs:
+  using: "composite"
+  steps:
+  - name: Check if ECR Repository exists
+    shell: bash
+    run: |
+      if ! aws ecr describe-repositories --region ${{ inputs.aws_region }} --repository-names ${{ inputs.registry_name }} &>/dev/null; then
+        echo "The ECR repository ${{ inputs.registry_name }} was not found. Creating...."
+        aws ecr create-repository --region ${{ inputs.aws_region }} --repository-name ${{ inputs.registry_name}}
+      fi
