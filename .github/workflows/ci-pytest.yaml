@@ -1,4 +1,4 @@
-name: CI
+name: CI - Pytest
 on:
   workflow_dispatch:
   workflow_call:
@@ -15,13 +15,11 @@ jobs:
       - name: Checkout code (including tags)
         uses: actions/checkout@v3
 
-      #### Testing Skipped ####
-      # - name: continuous-testing
-      #   uses: zmynx/github-actions/.github/actions/npm-test@feature/gha
-      #   with:
-      #     node_version: 16
-      #     test_command: npm run test
-      #     force_install_dependencies: true
+      - name: continuous-testing
+        uses: zmynx/github-actions/.github/actions/python/pytest@feature/gha
+        with:
+          python_version: 3.10
+          test_command: npm run test
 
   slack:
     needs: [continuous-integration]
@@ -29,7 +27,7 @@ jobs:
     if: always()
     steps:
       - name: Send slack message
-        uses: zmynx/github-actions/.github/actions/send-slack-message@feature/gha
+        uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
         with:
           result: ${{ needs.continuous-integration.result }}
           title: "CI result:"
