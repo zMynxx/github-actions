@@ -13,7 +13,7 @@ env:
 jobs:
   plan:
     name: plan
-    uses: zmynx/github-actions/.github/workflows/terragrunt/plan.yaml@feature/gha
+    uses: zmynx/github-actions/.github/workflows/tg-plan.yaml@feature/gha
 
   destroy:
     needs: [plan]
