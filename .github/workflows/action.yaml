@@ -21,7 +21,7 @@ jobs:
         with:
           # now you can use expressions 🥳
           # uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
-          uses: format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF)
+          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF) }}
           # # the `with` needs to be converted to a valid json string
           # with: '{ "node-version": 18 }'
 
