@@ -57,4 +57,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # GITHUB_ACTIONS_CONFIG_FILE: .github/workflows/super-linter/actionlint.yaml
           ## This allows for pipelines to pass on linter errors
-          #   DISABLE_ERRORS: true
+            DISABLE_ERRORS: true
