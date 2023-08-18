@@ -1,1 +1,45 @@
-terragrunt/apply.yml
+name: "Run-all Apply Terragrunt"
+on:
+  workflow_dispatch:
+    inputs:
+      tf_working_dir:
+        description: "Terragrunt working directory"
+        required: false
+        default: "terraform/terragrunt/prod/us-east-1"
+
+env:
+  TG_DIR: ${{ inputs.tf_working_dir }}
+
+jobs:
+  plan:
+    name: plan
+    uses: zmynx/github-actions/.github/workflows/tg-plan.yaml@feature/gha
+
+  apply:
+    needs: [plan]
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: GitHub-Actions-OIDC
+          role-duration-seconds: 1700
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Apply
+        uses: gruntwork-io/terragrunt-action@v1.0.7
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        with:
+          tf_version: ${{ vars.TF_VERSION }}
+          tg_version: ${{ vars.TG_VERSION }}
+          tg_dir: ${{ env.TG_DIR }}
+          tg_command: "run-all apply --terragrunt-non-interactive"
