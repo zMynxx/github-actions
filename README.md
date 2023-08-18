@@ -11,3 +11,4 @@ Repository to store my github actions manifests.
 - [Awesome-actions](https://github.com/sdras/awesome-actions)
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/summary/new_code?id=zMynxx_github-actions)
+[![GitHub Super-Linter](https://github.com/zMynxx/github-actions/actions/workflows/<WORKFLOW_FILE_NAME>/badge.svg)](https://github.com/marketplace/actions/super-linter)
