@@ -31,27 +31,20 @@ runs:
     with:
       node-version: ${{ inputs.node_version }}
 
-  - name: Cache node modules
-    id: cache-npm
-    uses: actions/cache@v3
-    env:
-      cache-name: cache-node-modules
-    with:
-      path: ./node_modules
-      key: modules-${{ hashFiles('package-lock.json') }}
+  # - name: Cache node modules
+  #   id: cache-npm
+  #   uses: actions/cache@v3
+  #   env:
+  #     cache-name: cache-node-modules
+  #   with:
+  #     path: ./node_modules
+  #     key: modules-${{ hashFiles('package-lock.json') }}
 
   - name: Install Dependencies
-    if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
-    run: npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }} --include=dev
-
-  - name: Debug Information
-    shell: bash
-    working-directory: ${{ inputs.package_json_path }}
-    run: |
-      ls -la
-      npm list
+    run: npm install --include=dev ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
   - name: Run tests
     id: test
