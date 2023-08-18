@@ -46,6 +46,11 @@ runs:
     working-directory: ${{ inputs.package_json_path }}
     run: npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
+  - name: Debug Information
+    run: |
+      ls -la
+      npm list
+
   - name: Run tests
     id: test
     shell: bash
