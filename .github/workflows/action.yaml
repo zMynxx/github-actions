@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
   push:
 
-env:
-  ORG_NAME: zMynxx
-  REPO_NAME: github-actions
-  REF: feature/gha
 jobs:
   check:
     name: check pr status
     runs-on: ubuntu-22.04
+    env:
+      ORG_NAME: zMynxx
+      REPO_NAME: github-actions
+      REF: feature/gha
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
         with:
           # now you can use expressions 🥳
           # uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
-          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF) }}
+          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}', env.ORG_NAME,  env.REPO_NAME, env.REF) }}
           # # the `with` needs to be converted to a valid json string
           # with: '{ "node-version": 18 }'
 
