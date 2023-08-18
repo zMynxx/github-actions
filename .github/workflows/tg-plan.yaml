@@ -6,8 +6,10 @@ on:
         description: "Terragrunt working directory"
         required: false
         default: "terragrunt"
-  push:
+  # push:
   pull_request:
+    branches:
+      - main
 
 env:
   TG_DIR: ${{ inputs.tf_working_dir }}
