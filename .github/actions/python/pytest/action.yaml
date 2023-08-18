@@ -18,72 +18,71 @@ inputs:
 
 outputs:
   test_result:
-    description: 'My output description'
+    description: "My output description"
     value: ${{ steps.test.outputs.test_result }}
 
 runs:
   using: "composite"
   steps:
+    - name: Set up Python
+      id: setup_python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python_version }}
 
-  - name: Set up Python
-    id: setup_python
-    uses: actions/setup-python@v4
-    with:
-      python-version: ${{ inputs.python_version }}
+    - name: cache virtualenv
+      uses: actions/cache@v3
+      id: cache-venv
+      with:
+        path: ./.venv/
+        key: ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-venv-
 
-  - name: cache virtualenv
-    uses: actions/cache@v3
-    id: cache-venv
-    with:
-      path: ./.venv/
-      key: ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-venv-${{ hashFiles('**/requirements.txt') }}
-      restore-keys: |
-        ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-venv-
+    - name: Set up virtualenv
+      if: steps.cache-venv.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        python -m venv ./.venv
+        source ./.venv/bin/activate
 
-  - name: Set up virtualenv
-    if: steps.cache-venv.outputs.cache-hit != 'true'
-    shell: bash
-    run: |
-      python -m venv ./.venv
-      source ./.venv/bin/activate
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install ruff pytest
+        if [ -f ${{ inputs.requirements_file }} ]; then pip install -r ${{ inputs.requirements_file }}; fi
 
-  - name: Install dependencies
-    shell: bash
-    run: |
-      python -m pip install --upgrade pip
-      pip install ruff pytest
-      if [ -f ${{ inputs.requirements_file }} ]; then pip install -r ${{ inputs.requirements_file }}; fi
+    - name: Lint with ruff
+      shell: bash
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
+        # default set of ruff rules with GitHub Annotations
+        ruff --format=github --target-version=py37 .
 
-  - name: Lint with ruff
-    shell: bash
-    run: |
-      # stop the build if there are Python syntax errors or undefined names
-      ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
-      # default set of ruff rules with GitHub Annotations
-      ruff --format=github --target-version=py37 .
+    # Linters
 
-  # Linters
+    # - name: Lint with flake8
+    #   run: |
+    #     pip install flake8
+    #     flake8 --max-line-length 100 --exclude .github,.git,__pycache__,*.pyc,*.pyo,*.pyd,_pycache_
 
-  # - name: Lint with flake8
-  #   run: |
-  #     pip install flake8
-  #     flake8 --max-line-length 100 --exclude .github,.git,__pycache__,*.pyc,*.pyo,*.pyd,_pycache_
+    # - name: Lint with black
+    #   run: |
+    #     pip install black
+    #     black --check --exclude .github .
 
-  # - name: Lint with black
-  #   run: |
-  #     pip install black
-  #     black --check --exclude .github . 
-
-  - name: Run pytest
-    id: test
-    shell: bash
-    run: |
-      source ./.venv/bin/activate
-      pytest_output=$(python -m pytest --collect-only 2>&1 || true)
-      if [[ $pytest_output == *"collected 0 items"* ]]; then
-        echo "No tests found. Exiting with success status code."
-      else
-        echo "Tests found. Running pytest."
-        ${{ inputs.test_command }}
-      fi
-      echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT
+    - name: Run pytest
+      id: test
+      shell: bash
+      run: |
+        source ./.venv/bin/activate
+        pytest_output=$(python -m pytest --collect-only 2>&1 || true)
+        if [[ $pytest_output == *"collected 0 items"* ]]; then
+          echo "No tests found. Exiting with success status code."
+        else
+          echo "Tests found. Running pytest."
+          ${{ inputs.test_command }}
+        fi
+        echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT

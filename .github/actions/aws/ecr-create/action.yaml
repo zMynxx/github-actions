@@ -18,10 +18,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Check if ECR Repository exists
-    shell: bash
-    run: |
-      if ! aws ecr describe-repositories --region ${{ inputs.aws_region }} --repository-names ${{ inputs.registry_name }} &>/dev/null; then
-        echo "The ECR repository ${{ inputs.registry_name }} was not found. Creating...."
-        aws ecr create-repository --region ${{ inputs.aws_region }} --repository-name ${{ inputs.registry_name}}
-      fi
+    - name: Check if ECR Repository exists
+      shell: bash
+      run: |
+        if ! aws ecr describe-repositories --region ${{ inputs.aws_region }} --repository-names ${{ inputs.registry_name }} &>/dev/null; then
+          echo "The ECR repository ${{ inputs.registry_name }} was not found. Creating...."
+          aws ecr create-repository --region ${{ inputs.aws_region }} --repository-name ${{ inputs.registry_name}}
+        fi
