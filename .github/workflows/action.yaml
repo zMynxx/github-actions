@@ -1,0 +1,33 @@
+name: Test
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  check:
+    name: check pr status
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: jenseng/dynamic-uses@v1
+        with:
+          # now you can use expressions 🥳
+          # uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/git/check-merge@${{ vars.REF}}
+          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}', vars.ORG_NAME,  vars.REPO_NAME, vars.REF) }}
+          # # the `with` needs to be converted to a valid json string
+          # with: '{ "node-version": 18 }'
+
+      # - name: check if PR is merged
+      # uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/git/check-merge@${{ vars.REF}}
+
+      # - name: Call another action
+      #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/python/pytest@feature/gha
+      #   with:
+      #     requirements_file: ./poc/pytest/requirements.txt
+  # check2:
+  #   name: Call reusable workflow
+  #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/workflows/ci-pytest.yaml@feature/gha
