@@ -1,6 +1,6 @@
 ---
 name: npm tests
-description: "Install dependencies and run tests using npm"
+description: Install dependencies and run tests using npm
 
 inputs:
   test_command:
@@ -22,11 +22,11 @@ inputs:
 
 outputs:
   test_result:
-    description: "Tests result"
+    description: Tests result
     value: ${{ steps.test.outputs.test_result }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - uses: actions/setup-node@v3
       with:

@@ -16,7 +16,7 @@ inputs:
 #   id-token: write
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Check if ECR Repository exists
       shell: bash

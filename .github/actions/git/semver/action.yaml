@@ -8,7 +8,7 @@ outputs:
     value: ${{ steps.create-new-tag.outputs.new_tag }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Bump version and create a tag
       id: create-new-tag
