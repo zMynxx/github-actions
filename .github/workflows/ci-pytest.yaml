@@ -19,7 +19,7 @@ jobs:
         uses: zmynx/github-actions/.github/actions/python/pytest@feature/gha
         with:
           python_version: 3.10
-          test_command: npm run test
+          test_command: pytest -v poc/pytest/
 
   slack:
     needs: [continuous-integration]
