@@ -1,3 +1,4 @@
+---
 name: 'Slack Notification'
 description: 'Send custom Slack notification'
 inputs:

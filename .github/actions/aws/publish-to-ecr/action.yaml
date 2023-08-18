@@ -1,3 +1,4 @@
+---
 name: Publish Image to ECR
 description: Build dockerfile based on a given context and push it to ECR with a given tagName
 inputs:
