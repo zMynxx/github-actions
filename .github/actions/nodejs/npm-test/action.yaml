@@ -48,6 +48,7 @@ runs:
 
   - name: Debug Information
     shell: bash
+    working-directory: ${{ inputs.package_json_path }}
     run: |
       ls -la
       npm list
