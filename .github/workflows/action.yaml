@@ -7,10 +7,6 @@ jobs:
   check:
     name: check pr status
     runs-on: ubuntu-22.04
-    vars:
-      ORG_NAME: zMynxx
-      REPO_NAME: github-actions
-      REF: feature/gha
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
