@@ -1,4 +1,4 @@
-name: npm tests 
+name: npm tests
 description: "Install dependencies and run tests using npm"
 
 inputs:
@@ -14,36 +14,50 @@ inputs:
     required: false
     description: Set to true to use --force flag while installing dependencies
     default: false
-    
+  package_json_path:
+    required: false
+    description: Path to package.json file
+    default: package.json
+
 outputs:
   test_result:
-    description: 'My output description'
+    description: 'Tests result'
     value: ${{ steps.test.outputs.test_result }}
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: ${{ inputs.node_version }}
+  - uses: actions/setup-node@v3
+    with:
+      node-version: ${{ inputs.node_version }}
 
-    - name: Cache node modules
-      id: cache-npm
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ./node_modules
-        key: modules-${{ hashFiles('package-lock.json') }}
+  - name: Cache node modules
+    id: cache-npm
+    uses: actions/cache@v3
+    env:
+      cache-name: cache-node-modules
+    with:
+      path: ${{ inputs.package_json_path }}/node_modules
+      key: modules-${{ hashFiles('package-lock.json') }}
 
-    - name: Install Dependencies
-      shell: bash
-      if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-      run: npm install ${{ inputs.force_install_dependencies && '--force' || '' }}}
+  - name: Install Dependencies
+    if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    shell: bash
+    working-directory: ${{ inputs.package_json_path }}
+    run: |
+      npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
-    - name: Run tests
-      shell: bash
-      id: test
-      run: |
-        ${{ inputs.test_command }}
-        echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT
+  - name: Install mocha
+    if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    shell: bash
+    working-directory: ${{ inputs.package_json_path }}
+    run: |
+      npm install --global mocha
+
+  - name: Run tests
+    id: test
+    shell: bash
+    working-directory: ${{ inputs.package_json_path }}
+    run: |
+      ${{ inputs.test_command }}
+      echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT
