@@ -1,3 +1,4 @@
+---
 name: "Run-all Destroy Terragrunt"
 on:
   workflow_dispatch:

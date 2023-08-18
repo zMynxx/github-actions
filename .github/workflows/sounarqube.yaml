@@ -1,3 +1,4 @@
+---
 name: SonarQube scan
 on:
   workflow_dispatch:

@@ -1,3 +1,4 @@
+---
 name: "Run-all Plan Terragrunt"
 on:
   workflow_dispatch:

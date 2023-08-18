@@ -1,3 +1,4 @@
+---
 name: "Run-all Apply Terragrunt"
 on:
   workflow_dispatch:

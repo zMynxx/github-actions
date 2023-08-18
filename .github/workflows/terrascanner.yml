@@ -1,3 +1,4 @@
+---
 name: Terrascan scan
 on:
   workflow_dispatch:

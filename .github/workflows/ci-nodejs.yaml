@@ -1,3 +1,4 @@
+---
 name: CI - NodeJS
 on:
   workflow_dispatch:

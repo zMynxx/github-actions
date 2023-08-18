@@ -1,6 +1,6 @@
 # github-actions
 
-Repository to store my github actions manifests.
+Repository to store my GitHub actions manifests.
 
 ## Cheatsheet - thanks to GitGuardian
 
