@@ -23,7 +23,7 @@ jobs:
         with:
           python_version: ${{ matrix.version }}
           test_command: pytest -v poc/pytest
-          requirements_file: /poc/pytest/requirements.txt
+          requirements_file: poc/pytest/requirements.txt
 
   slack:
     needs: [continuous-integration]
