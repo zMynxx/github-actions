@@ -3,6 +3,10 @@ on:
   workflow_dispatch:
   push:
 
+env:
+  ORG_NAME: zMynxx
+  REPO_NAME: github-actions
+  REF: feature/gha
 jobs:
   check:
     name: check pr status
@@ -16,17 +20,17 @@ jobs:
       - uses: jenseng/dynamic-uses@v1
         with:
           # now you can use expressions 🥳
-          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' vars.ORG_NAME,  vars.REPO_NAME, vars.REF) }}
+          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF) }}
           # # the `with` needs to be converted to a valid json string
           # with: '{ "node-version": 18 }'
 
       # - name: check if PR is merged
-      #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/git/check-merge@${{ vars.REF}}
+      #   uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
 
       # - name: Call another action
-      #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/python/pytest@feature/gha
+      #   uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/python/pytest@feature/gha
       #   with:
       #     requirements_file: ./poc/pytest/requirements.txt
   # check2:
   #   name: Call reusable workflow
-  #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/workflows/ci-pytest.yaml@feature/gha
+  #   uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/workflows/ci-pytest.yaml@feature/gha
