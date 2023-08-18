@@ -24,6 +24,7 @@ jobs:
           node_version: ${{ matrix.version }}
           test_command: npm run test
           force_install_dependencies: false
+          package_json_path: ./poc/npm-test
 
   slack:
     needs: [continuous-integration]
