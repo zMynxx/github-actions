@@ -45,7 +45,7 @@ runs:
     run: |
       python -m venv ./.venv
       source ./.venv/bin/activate
-      python -m pip install -r ${{ inputs.requirements_file }
+      python -m pip install -r ${{ inputs.requirements_file }}
 
   # Linters
 
