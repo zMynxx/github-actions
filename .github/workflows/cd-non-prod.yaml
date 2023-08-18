@@ -26,7 +26,7 @@ jobs:
   ci:
     needs: [check]
     name: continuous integration
-    uses: zmynx/github-actions/.github/workflows/ci.yaml@feature/gha
+    uses: zmynx/github-actions/.github/workflows/ci-nodejs.yaml@feature/gha
     secrets: inherit
 
   cd-preq:
