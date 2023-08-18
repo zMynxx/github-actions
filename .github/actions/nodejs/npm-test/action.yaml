@@ -45,8 +45,7 @@ runs:
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
     run: |
-      npm install -g mocha
-      npm install --include=dev ${{ inputs.force_install_dependencies == true && '--force' || '' }}
+      npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
   - name: Run tests
     id: test
