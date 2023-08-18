@@ -1,3 +1,4 @@
+---
 name: Semantic Versioning
 description: 'Reads the PR body and checks for #major or #minor to bump the version, otherwise it bumps the patch version. If no tags exist, it will create a 1.0.0 tag. If the tag already exists, it will retry 5 times with a 5 second delay. If it still fails, it will exit with an error. Outputs the new tag as new_tag.'
 

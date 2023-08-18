@@ -1,3 +1,4 @@
+---
 name: CI - Pytest
 on:
   workflow_dispatch:
@@ -25,15 +26,15 @@ jobs:
           test_command: pytest -v poc/pytest
           requirements_file: poc/pytest/requirements.txt
 
-  slack:
-    needs: [continuous-integration]
-    runs-on: ubuntu-20.04
-    if: always()
-    steps:
-      - name: Send slack message
-        uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
-        with:
-          result: ${{ needs.continuous-integration.result }}
-          title: "CI result:"
-          channel: "prod"
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
+  # slack:
+  #   needs: [continuous-integration]
+  #   runs-on: ubuntu-20.04
+  #   if: always()
+  #   steps:
+  #     - name: Send slack message
+  #       uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
+  #       with:
+  #         result: ${{ needs.continuous-integration.result }}
+  #         title: "CI result:"
+  #         channel: "prod"
+  #         slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}

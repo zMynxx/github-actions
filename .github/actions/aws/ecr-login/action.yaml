@@ -1,3 +1,4 @@
+---
 name: Login to ECR
 description: ARN based login to AWS ecr
 inputs:

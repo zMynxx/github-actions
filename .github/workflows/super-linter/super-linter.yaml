@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
   push:
   pull_request:
-    - main
+    branches:
+      - main
 
 ###############
 # Set the Job #

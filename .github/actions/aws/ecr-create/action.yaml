@@ -1,3 +1,4 @@
+---
 name: ECR Validate
 description: Create ECR registery if none exists
 inputs:
