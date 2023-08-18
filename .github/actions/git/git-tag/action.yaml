@@ -10,9 +10,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Push new tag
-    id: push-new-tag
-    shell: bash
-    run: |
-      git tag ${{ inputs.tag }}
-      git push origin ${{ inputs.tag }} && exit 0 || exit 1
+    - name: Push new tag
+      id: push-new-tag
+      shell: bash
+      run: |
+        git tag ${{ inputs.tag }}
+        git push origin ${{ inputs.tag }} && exit 0 || exit 1

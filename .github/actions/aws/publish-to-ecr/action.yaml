@@ -34,19 +34,19 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Set up Docker Buildx
-    uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-  - name: Build the image (Dockerfile)
-    uses: docker/build-push-action@v2
-    id: build-image
-    with:
-      context: ${{ inputs.dockerfile_context }}
-      file: ${{ inputs.dockerfile_name }}
-      build-args: ${{ inputs.build_args }}
-      push: true
-      tags: |
-        ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:${{ inputs.image_tag }}
-        ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:latest
-      cache-from: type=gha
-      cache-to: type=gha,mode=max
+    - name: Build the image (Dockerfile)
+      uses: docker/build-push-action@v2
+      id: build-image
+      with:
+        context: ${{ inputs.dockerfile_context }}
+        file: ${{ inputs.dockerfile_name }}
+        build-args: ${{ inputs.build_args }}
+        push: true
+        tags: |
+          ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:${{ inputs.image_tag }}
+          ${{ inputs.ecr_registry }}/${{ inputs.ecr_repo_name }}:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
