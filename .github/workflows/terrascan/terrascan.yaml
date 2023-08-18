@@ -18,7 +18,7 @@ jobs:
           policy_type: "aws"
           only_warn: true
           sarif_upload: true
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_PROD }}
+          #   webhook_url: ${{ secrets.SLACK_WEBHOOK_PROD }}
           find_vulnerabilities: true
           #non_recursive:
           #iac_dir:

@@ -1,4 +1,4 @@
-name: Test
+name: Test dynamic uses
 on:
   workflow_dispatch:
   push:
@@ -28,6 +28,6 @@ jobs:
       #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/actions/python/pytest@feature/gha
       #   with:
       #     requirements_file: ./poc/pytest/requirements.txt
-  # check2:
-  #   name: Call reusable workflow
-  #   uses: ${{ vars.ORG_NAME }}/${{ vars.REPO_NAME }}/.github/workflows/ci-pytest.yaml@feature/gha
+  check2:
+    name: Call reusable workflow
+    uses: ${{ format('{0}/{1}/.github/workflows/ci-pytest.yaml@{2}', vars.ORG_NAME,  vars.REPO_NAME, vars.REF) }}
