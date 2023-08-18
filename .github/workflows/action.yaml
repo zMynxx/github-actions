@@ -20,12 +20,13 @@ jobs:
       - uses: jenseng/dynamic-uses@v1
         with:
           # now you can use expressions 🥳
-          uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF) }}
+          uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
+          # uses: ${{ format('{0}/{1}/.github/actions/git/check-merge@{2}' env.ORG_NAME,  env.REPO_NAME, env.REF) }}
           # # the `with` needs to be converted to a valid json string
           # with: '{ "node-version": 18 }'
 
       # - name: check if PR is merged
-      #   uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
+      # uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/git/check-merge@${{ env.REF}}
 
       # - name: Call another action
       #   uses: ${{ env.ORG_NAME }}/${{ env.REPO_NAME }}/.github/actions/python/pytest@feature/gha
