@@ -31,30 +31,24 @@ runs:
     with:
       node-version: ${{ inputs.node_version }}
 
-  # - name: Cache node modules
-  #   id: cache-npm
-  #   uses: actions/cache@v3
-  #   env:
-  #     cache-name: cache-node-modules
-  #   with:
-  #     path: ./node_modules
-  #     key: modules-${{ hashFiles('package-lock.json') }}
-
-  - name: clean cache
-    shell: bash
-    run: |
-      rm -rf node_modules
-      npm cache clean --force
+  - name: Cache node modules
+    id: cache-npm
+    uses: actions/cache@v3
+    env:
+      cache-name: cache-node-modules
+    with:
+      path: ${{ inputs.package_json_path }}/node_modules
+      key: modules-${{ hashFiles('package-lock.json') }}
 
   - name: Install Dependencies
-    # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
     run: |
       npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
   - name: Install mocha
-    # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
     run: |
