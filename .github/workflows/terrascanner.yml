@@ -8,6 +8,7 @@ jobs:
   terrascan_job:
     runs-on: ubuntu-22.04
     name: terrascan-action
+    permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - name: Terrascan IaC scanner
