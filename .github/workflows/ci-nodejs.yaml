@@ -10,7 +10,10 @@ on:
 
 jobs:
   continuous-integration:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        version: [16, 17, 18]
     steps:
       - name: Checkout code (including tags)
         uses: actions/checkout@v3
@@ -18,7 +21,7 @@ jobs:
       - name: continuous-testing
         uses: zmynx/github-actions/.github/actions/nodejs/npm-test@feature/gha
         with:
-          node_version: 16
+          node_version: ${{ matrix.version }}
           test_command: npm run test
           force_install_dependencies: false
 
