@@ -90,7 +90,7 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          echo "pr_body_lowercase=${PR_BODY,,}" >> $GITHUB_OUTPUT
+          echo "pr_body_lowercase=${PR_BODY,,}" >> "$GITHUB_OUTPUT"
 
       - name: Publish to ECR
         id: new_tag
@@ -98,7 +98,7 @@ jobs:
         env:
           NEW_TAG: ${{ contains(steps.downcase.outputs.pr_body_lowercase, '#major') && steps.semverv2.outputs.major || contains(steps.downcase.outputs.pr_body_lowercase, '#minor') && steps.semverv2.outputs.minor || steps.semverv2.outputs.patch }}
         run: |
-          echo "new_tag=${{ env.NEW_TAG }}" >> $GITHUB_OUTPUT
+          echo "new_tag=${{ env.NEW_TAG }}" >> "$GITHUB_OUTPUT"
 
       ## Require permission to write to id-token
       - name: Publish
