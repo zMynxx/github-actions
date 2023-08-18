@@ -14,14 +14,13 @@ jobs:
   plan:
     name: plan
     uses: zmynx/github-actions/.github/workflows/terragrunt/plan.yaml@feature/gha
-    
+
   apply:
     needs: [plan]
     permissions:
       id-token: write
       contents: read
     runs-on: ubuntu-22.04
-    needs: [plan]
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
