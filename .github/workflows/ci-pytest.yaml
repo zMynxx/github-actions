@@ -10,7 +10,10 @@ on:
 
 jobs:
   continuous-integration:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        version: [3.10.4, 3.11, 3.12]
     steps:
       - name: Checkout code (including tags)
         uses: actions/checkout@v3
@@ -18,7 +21,7 @@ jobs:
       - name: continuous-testing
         uses: zmynx/github-actions/.github/actions/python/pytest@feature/gha
         with:
-          python_version: 3.10
+          python_version: ${{ matrix.version }}
           test_command: pytest -v poc/pytest/
 
   slack:
