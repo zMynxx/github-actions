@@ -44,7 +44,7 @@ runs:
     if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
-    run: npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
+    run: npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }} --include=dev
 
   - name: Debug Information
     shell: bash
