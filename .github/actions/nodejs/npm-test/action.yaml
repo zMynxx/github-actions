@@ -40,12 +40,25 @@ runs:
   #     path: ./node_modules
   #     key: modules-${{ hashFiles('package-lock.json') }}
 
+  - name: clean cache
+    shell: bash
+    run: |
+      rm -rf node_modules
+      npm cache clean --force
+
   - name: Install Dependencies
     # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
     run: |
       npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
+
+  - name: Install mocha
+    # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    shell: bash
+    working-directory: ${{ inputs.package_json_path }}
+    run: |
+      npm install --global mocha
 
   - name: Run tests
     id: test
