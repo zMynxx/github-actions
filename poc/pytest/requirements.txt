@@ -1,1 +1,1 @@
-PyYAML @ file:///private/tmp/pyyaml-20230718-6387-cxgeib/PyYAML-6.0.1
+docutils==0.20.1
