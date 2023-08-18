@@ -47,6 +47,7 @@ runs:
     run: npm install ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
   - name: Debug Information
+    shell: bash
     run: |
       ls -la
       npm list
