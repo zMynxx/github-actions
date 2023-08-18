@@ -1,5 +1,5 @@
 name: Semantic Versioning
-description: "Check for the latest tag with given prefix (optional). It will create a 1.0.0 tag. Outputs all the available possibilities for patch, minor, major including v suffixed."
+description: Check for the latest tag with given prefix (optional). It will create a 1.0.0 tag. Outputs all the available possibilities for patch, minor, major including v suffixed.
 
 inputs:
   fallback:
@@ -32,7 +32,7 @@ outputs:
     value: ${{ steps.prefixed.outputs.prefix_patch }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Get Previous tag
       id: previoustag

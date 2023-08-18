@@ -3,7 +3,7 @@ name: Check if PR is merged
 description: Check if PR is merged
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Exit if PR type event isnt merged
       if: github.event.pull_request.merged == false

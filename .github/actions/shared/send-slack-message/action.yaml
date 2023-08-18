@@ -1,26 +1,26 @@
 ---
-name: "Slack Notification"
-description: "Send custom Slack notification"
+name: Slack Notification
+description: Send custom Slack notification
 inputs:
   slack_webhook:
     required: true
     description: Slack Webhook
   result:
-    description: "Result of the previous step (success or failure)"
+    description: Result of the previous step (success or failure)
     required: true
   channel:
-    description: "Slack channel to send the notification to"
+    description: Slack channel to send the notification to
     required: true
   extra_message:
-    description: "Message to send in the Slack notification"
+    description: Message to send in the Slack notification
     required: false
   title:
-    description: "Title of the Slack notification"
+    description: Title of the Slack notification
     required: false
     default: "GitHub Build Result:"
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2

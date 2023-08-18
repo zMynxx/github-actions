@@ -17,7 +17,7 @@ outputs:
 #   contents: write
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Login to Amazon ECR
       id: login-ecr

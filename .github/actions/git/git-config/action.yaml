@@ -10,10 +10,10 @@ inputs:
   email:
     required: false
     description: the git email
-    default: "bot@github-actions.com"
+    default: bot@github-actions.com
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: configure git
       shell: bash
