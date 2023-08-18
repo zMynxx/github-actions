@@ -6,7 +6,7 @@ on:
       SLACK_WEBHOOK_PROD:
         description: "Github secret containig slack webhook for prod channel"
         required: true
-  push:
+  # push:
 
 jobs:
   continuous-integration:

@@ -21,7 +21,7 @@ inputs:
 
 outputs:
   test_result:
-    description: 'My output description'
+    description: 'Tests result'
     value: ${{ steps.test.outputs.test_result }}
 
 runs:
@@ -44,7 +44,9 @@ runs:
     # if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
     shell: bash
     working-directory: ${{ inputs.package_json_path }}
-    run: npm install --include=dev ${{ inputs.force_install_dependencies == true && '--force' || '' }}
+    run: |
+      npm install -g mocha
+      npm install --include=dev ${{ inputs.force_install_dependencies == true && '--force' || '' }}
 
   - name: Run tests
     id: test
