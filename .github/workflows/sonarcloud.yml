@@ -29,9 +29,10 @@
 name: SonarCloud analysis
 
 on:
-  pull_request:
-    branches:
-      - main
+  # Turned off after verified that it works
+  # pull_request:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 permissions:
