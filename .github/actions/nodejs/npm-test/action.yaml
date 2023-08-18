@@ -24,11 +24,6 @@ outputs:
     description: 'My output description'
     value: ${{ steps.test.outputs.test_result }}
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ${{ inputs.package_json_path }}
-
 runs:
   using: "composite"
   steps:
@@ -47,10 +42,12 @@ runs:
 
   - name: Install Dependencies
     if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+    shell: bash
     run: npm install ${{ inputs.force_install_dependencies && '--force' || '' }}
 
   - name: Run tests
     id: test
+    shell: bash
     run: |
       ${{ inputs.test_command }}
       echo "test_result=${{ job.status }}" >> $GITHUB_OUTPUT
