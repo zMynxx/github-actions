@@ -10,6 +10,10 @@ inputs:
     required: false
     description: Python version to run
     default: "3.9"
+  requirements_file:
+    required: false
+    description: "Path to requirements file"
+    default: "requirements.txt"
 
 outputs:
   test_result:
@@ -41,7 +45,7 @@ runs:
     run: |
       python -m venv ./.venv
       source ./.venv/bin/activate
-      python -m pip install -r requirements.txt
+      python -m pip install -r ${{ inputs.requirements_file }
 
   # Linters
 
