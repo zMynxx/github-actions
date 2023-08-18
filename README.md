@@ -24,4 +24,4 @@ Repository to store my GitHub actions manifests.
 
 [![CI - Pytest](https://github.com/zMynxx/github-actions/actions/workflows/ci-pytest.yaml/badge.svg?event=push)](https://github.com/zMynxx/github-actions/actions/workflows/ci-pytest.yaml)
 
-<!-- https://github.com/zMynxx/github-actions/.github/workflows/ci-pytest.yaml -->
+[![Pull Request Trunk Check](https://github.com/zMynxx/github-actions/actions/workflows/trunk-check.yaml/badge.svg)](https://github.com/zMynxx/github-actions/actions/workflows/trunk-check.yaml)
