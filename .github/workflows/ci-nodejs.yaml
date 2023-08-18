@@ -6,7 +6,7 @@ on:
       SLACK_WEBHOOK_PROD:
         description: "Github secret containig slack webhook for prod channel"
         required: true
-  push:
+  # push:
 
 jobs:
   continuous-integration:
@@ -29,15 +29,15 @@ jobs:
           force_install_dependencies: false
           package_json_path: ./poc/npm-test
 
-  # slack:
-  #   needs: [continuous-integration]
-  #   runs-on: ubuntu-20.04
-  #   if: always()
-  #   steps:
-  #     - name: Send slack message
-  #       uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
-  #       with:
-  #         result: ${{ needs.continuous-integration.result }}
-  #         title: "CI result:"
-  #         channel: "prod"
-  #         slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
+  slack:
+    needs: [continuous-integration]
+    runs-on: ubuntu-20.04
+    if: always()
+    steps:
+      - name: Send slack message
+        uses: zmynx/github-actions/.github/actions/shared/send-slack-message@feature/gha
+        with:
+          result: ${{ needs.continuous-integration.result }}
+          title: "CI result:"
+          channel: "prod"
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_PROD }}
