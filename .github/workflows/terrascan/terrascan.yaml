@@ -1,0 +1,31 @@
+name: Terrascan scan
+on:
+  push:
+  pull_request:
+
+jobs:
+  terrascan_job:
+    runs-on: ubuntu-22.04
+    name: terrascan-action
+    steps:
+      - uses: actions/checkout@v3
+      - name: Terrascan IaC scanner
+        id: terrascan
+        uses: tenable/terrascan-action@v1.4.1
+        with:
+          iac_type: "terraform"
+          iac_version: "v14"
+          policy_type: "aws"
+          only_warn: true
+          sarif_upload: true
+          #   webhook_url: ${{ secrets.SLACK_WEBHOOK_PROD }}
+          find_vulnerabilities: true
+          #non_recursive:
+          #iac_dir:
+          #policy_path:
+          #skip_rules:
+          #config_path:
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: terrascan.sarif

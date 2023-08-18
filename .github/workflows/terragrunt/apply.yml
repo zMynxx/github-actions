@@ -12,11 +12,11 @@ env:
 
 jobs:
   plan:
-    needs: [check]
     name: plan
     uses: zmynx/github-actions/.github/workflows/terragrunt/plan.yaml@feature/gha
-
+    
   apply:
+    needs: [plan]
     permissions:
       id-token: write
       contents: read
