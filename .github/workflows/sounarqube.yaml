@@ -1,12 +1,13 @@
 name: SonarQube scan
 on:
   workflow_dispatch:
+  # Turned off after verified that it works
   # Trigger analysis when pushing to your main branches, and when creating a pull request.
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
 
 jobs:
   sonarqube:
