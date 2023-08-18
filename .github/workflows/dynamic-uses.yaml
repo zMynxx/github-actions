@@ -4,7 +4,7 @@ on:
 
 jobs:
   check:
-    name: check pr status
+    name: Dynamic uses
     runs-on: ubuntu-22.04
     steps:
       - name: Check out repository code
