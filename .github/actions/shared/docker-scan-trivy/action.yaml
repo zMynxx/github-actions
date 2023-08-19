@@ -22,7 +22,7 @@ runs:
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: ${{ inputs.image-ref }}
-        format: ${{ inputs.format }}}
+        format: ${{ inputs.format }}
         output: ${{ inputs.output }}
 
     - name: Upload Trivy scan results to GitHub Security tab
