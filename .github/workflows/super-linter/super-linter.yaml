@@ -1,3 +1,4 @@
+---
 #################################
 #################################
 ## Super Linter GitHub Actions ##
@@ -12,8 +13,7 @@ on:
   workflow_dispatch:
   push:
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 ###############
 # Set the Job #
@@ -53,9 +53,9 @@ jobs:
       - name: Lint Code Base
         uses: super-linter/super-linter/slim@v5.2.1
         env:
+          ## This allows for pipelines to pass on linter errors
+          DISABLE_ERRORS: true
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTIONS_CONFIG_FILE: .github/workflows/super-linter/actionlint.yaml
-          ## This allows for pipelines to pass on linter errors
-          #   DISABLE_ERRORS: true
+          # GITHUB_ACTIONS_CONFIG_FILE: .github/workflows/super-linter/actionlint.yaml

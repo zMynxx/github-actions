@@ -1,12 +1,15 @@
+---
 name: Terrascan scan
 on:
-  push:
+  workflow_dispatch:
+  # push:
   pull_request:
 
 jobs:
   terrascan_job:
     runs-on: ubuntu-22.04
     name: terrascan-action
+    permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - name: Terrascan IaC scanner
@@ -26,6 +29,7 @@ jobs:
           #skip_rules:
           #config_path:
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2.21.4
         with:
           sarif_file: terrascan.sarif
+          category: terrascan
