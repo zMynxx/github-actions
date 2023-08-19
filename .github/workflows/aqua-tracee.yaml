@@ -9,9 +9,8 @@ jobs:
   tracee:
     runs-on: ubuntu-22.04
     permissions:
-      write-all
-      # security-events: write
-      # pull-requests: write
+      id-token: read
+      pull-requests: write
       # contents: read
     steps:
       - uses: actions/checkout@v3
