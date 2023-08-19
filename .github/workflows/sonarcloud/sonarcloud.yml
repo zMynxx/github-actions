@@ -1,3 +1,4 @@
+---
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -29,12 +30,10 @@
 name: SonarCloud analysis
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # Turned off after verified that it works
+  # pull_request:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 permissions:
