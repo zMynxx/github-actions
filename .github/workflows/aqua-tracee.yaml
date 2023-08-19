@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Start Tracee
-        uses: aquasecurity/tracee-action@v0.3.0-start
+        uses: aquasecurity/tracee-action@v0.2.0-start
 
       - name: Run your tests
         run: echo "Run your tests here"
 
       - name: Stop Tracee
-        uses: aquasecurity/tracee-action@v0.3.0-stop
+        uses: aquasecurity/tracee-action@v0.2.0-stop
