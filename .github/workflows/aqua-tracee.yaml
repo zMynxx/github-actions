@@ -19,5 +19,5 @@ jobs:
       - name: Stop Tracee
         uses: aquasecurity/tracee-action@v0.2.0-stop
         with:
-          create_pr: true
-          fail_on_diff: true
+          create-pr: true
+          fail-on-diff: true
