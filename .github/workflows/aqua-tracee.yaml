@@ -9,9 +9,10 @@ jobs:
   tracee:
     runs-on: ubuntu-22.04
     permissions:
-      security-events: write
-      pull-requests: write
-      contents: read
+      write-all
+      # security-events: write
+      # pull-requests: write
+      # contents: read
     steps:
       - uses: actions/checkout@v3
       - name: Start Tracee
