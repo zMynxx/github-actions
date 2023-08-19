@@ -10,6 +10,7 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-22.04
     steps:
+      - uses: actions/checkout@v3
       - name: Start Tracee
         uses: aquasecurity/tracee-action@v0.2.0-start
 
