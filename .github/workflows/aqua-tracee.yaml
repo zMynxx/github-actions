@@ -8,10 +8,7 @@ on:
 jobs:
   tracee:
     runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      pull-requests: write
-      # contents: read
+    # permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - name: Start Tracee
@@ -23,5 +20,5 @@ jobs:
       - name: Stop Tracee
         uses: aquasecurity/tracee-action@v0.2.0-stop
         with:
-          create-pr: true
+          # create-pr: true
           fail-on-diff: true
