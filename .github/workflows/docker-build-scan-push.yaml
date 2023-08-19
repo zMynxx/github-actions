@@ -16,7 +16,7 @@ jobs:
         id: build-image
         with:
           context: ./poc/docker-scan-trivy
-          file: Dockerfile
+          file: ./poc/docker-scan-trivy/Dockerfile
           push: false
           tags: ${{ env.DOCKER_IMAGE }}
           cache-from: type=gha
