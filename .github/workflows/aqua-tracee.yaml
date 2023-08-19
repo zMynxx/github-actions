@@ -1,0 +1,17 @@
+name: Aqua Tracee Security
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  tracee:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Start Tracee
+        uses: aquasecurity/tracee-action@v0.3.0-start
+
+      - name: Run your tests
+        run: echo "Run your tests here"
+
+      - name: Stop Tracee
+        uses: aquasecurity/tracee-action@v0.3.0-stop
