@@ -16,9 +16,9 @@ jobs:
         id: terrascan
         uses: tenable/terrascan-action@v1.4.1
         with:
-          iac_type: "terraform"
-          iac_version: "v14"
-          policy_type: "aws"
+          iac_type: terraform
+          iac_version: v14
+          policy_type: aws
           only_warn: true
           sarif_upload: true
           #   webhook_url: ${{ secrets.SLACK_WEBHOOK_PROD }}
