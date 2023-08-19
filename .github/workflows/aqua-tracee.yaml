@@ -2,19 +2,22 @@
 name: Aqua Tracee Security
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
+  pull_request:
+    branches:
+      - main
 jobs:
   tracee:
-    permissions: write-all
     runs-on: ubuntu-22.04
     steps:
+      - uses: actions/checkout@v3
       - name: Start Tracee
-        uses: aquasecurity/tracee-action@v0.3.0-start
+        uses: aquasecurity/tracee-action@v0.2.0-start
 
       - name: Run your tests
         run: echo "Run your tests here"
 
       - name: Stop Tracee
-        uses: aquasecurity/tracee-action@v0.3.0-stop
+        uses: aquasecurity/tracee-action@v0.2.0-stop
+        with:
+          create_pr: true
+          fail_on_diff: true
