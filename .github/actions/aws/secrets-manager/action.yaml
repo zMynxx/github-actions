@@ -1,0 +1,31 @@
+---
+name: Login to ECR
+description: ARN based login to AWS ecr
+inputs:
+  aws_region:
+    required: false
+    description: The aws region
+    default: us-east-1
+  secret_name:
+    required: true
+    description: The name of the secret to retrieve
+    default: ecr-login
+
+outputs:
+  registry:
+    description: The registry url
+    value: ${{ steps.login-ecr.outputs.registry }}
+
+## Permissions needed for this action
+# permissions:
+#   contents: write
+
+runs:
+  using: composite
+  steps:
+    - name: Store ENV from AWS SecretManager
+      uses: say8425/aws-secrets-manager-actions@v2.2.1
+      with:
+        AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+        SECRET_NAME: ${{ inputs.secret_name }}
+        OUTPUT_PATH: .env # optional
