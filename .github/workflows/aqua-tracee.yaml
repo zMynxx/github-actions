@@ -9,7 +9,7 @@ jobs:
   tracee:
     runs-on: ubuntu-22.04
     permissions:
-      id-token: read
+      contents: read
       pull-requests: write
       # contents: read
     steps:
