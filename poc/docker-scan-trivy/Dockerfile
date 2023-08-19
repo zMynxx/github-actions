@@ -5,7 +5,8 @@ FROM python:3.8-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+ADD app.py .
+ADD requirements.txt .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -15,6 +16,8 @@ EXPOSE 80
 
 # Define environment variable
 ENV NAME=World
+
+USER nobody
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]
