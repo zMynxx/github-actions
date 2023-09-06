@@ -35,7 +35,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Destroy
-        uses: gruntwork-io/terragrunt-action@v1.0.7
+        uses: gruntwork-io/terragrunt-action@v1.0.8
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
