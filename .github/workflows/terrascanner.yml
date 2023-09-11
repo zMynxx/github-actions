@@ -11,7 +11,7 @@ jobs:
     name: terrascan-action
     permissions: write-all
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Terrascan IaC scanner
         id: terrascan
         uses: tenable/terrascan-action@v1.5.0
