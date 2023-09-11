@@ -9,7 +9,7 @@ jobs:
   tracee:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Start Tracee
         uses: aquasecurity/tracee-action@v0.2.0-start
 
