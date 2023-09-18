@@ -28,7 +28,7 @@ jobs:
     steps:
       ## Require permission to write to id-token
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.aws_assume_role_arn }}
           role-session-name: GitHub-Actions-OIDC-ECR
