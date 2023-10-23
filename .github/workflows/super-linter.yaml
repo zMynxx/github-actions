@@ -51,7 +51,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter/slim@v5.2.1
+        uses: super-linter/super-linter/slim@v5.4.3
         env:
           ## This allows for pipelines to pass on linter errors
           DISABLE_ERRORS: true
