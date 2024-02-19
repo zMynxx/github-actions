@@ -58,7 +58,7 @@ jobs:
       new_tag: ${{ steps.new_tag.outputs.new_tag }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: smipin/gitops
           ref: ${{ github.base_ref }}
