@@ -1,0 +1,33 @@
+---
+name: Clean up workspace 
+description: Clean up the given workspace on demand using bash 
+author: Lior Dux
+
+inputs:
+  github-workspace:
+    description: The workspace to clean up
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+      - name: Clean up workspace 
+        working-directory: ${{ inputs.github-workspace }}
+        id: cleanup
+        shell: bash
+        run: |
+          echo "----------------------------------------------------------------------------------------------------"
+          echo "            GITHUB_WORKSPACE=${{ inputs.github-workspace }}"
+          echo "----------------------------------------------------------------------------------------------------"
+          echo "                             Workspace currently contains:                                          "
+          ls --almost-all "${{ inputs.github-workspace }}"
+          echo "----------------------------------------------------------------------------------------------------"
+          echo "                             Cleaning up the workspace...                                           "
+          for file in $(ls --almost-all "${{ inputs.github-workspace }}"); do
+            echo "Removing ${file}..."
+            rm -rf "${file}"
+          done
+          echo "----------------------------------------------------------------------------------------------------"
+          echo "                              Workspace Cleanup complete!                                           "
+          echo "----------------------------------------------------------------------------------------------------"
